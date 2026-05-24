@@ -15,148 +15,265 @@
       --muted: #7a7060;
       --line: rgba(14,12,9,0.12);
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--paper);
       color: var(--ink);
       font-family: 'Libre Baskerville', Georgia, serif;
       overflow-x: hidden;
-      position: relative;
     }
-
-    /* Aged paper texture overlay */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 9999;
       opacity: 0.6;
     }
 
-    /* ─── HEADER ─── */
-    header {
-      border-bottom: 2px solid var(--ink);
-      padding: 0 4vw;
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes slideInLeft { from{opacity:0;transform:translateX(-50px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes slideInRight { from{opacity:0;transform:translateX(50px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes rulerGrow { from{width:0} to{width:100%} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes bgDrift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    @keyframes cardEntrance { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    @keyframes pulseGlow { 0%,100%{box-shadow:0 0 0 0 rgba(184,74,46,0.3)} 50%{box-shadow:0 0 0 10px rgba(184,74,46,0)} }
+    @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       position: relative;
       overflow: hidden;
+      background: var(--ink);
     }
-
-    .header-top {
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(184,74,46,0.1) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 80% at 80% 30%, rgba(200,155,60,0.07) 0%, transparent 60%),
+                  var(--ink);
+      background-size: 200% 200%;
+      animation: bgDrift 10s ease infinite;
+    }
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,240,232,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,240,232,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: fadeIn 2s ease both;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 6rem 4vw 3rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-left { animation: slideInLeft 1s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.2s; }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 0;
+      gap: 1rem;
+      animation: fadeIn 1s ease both;
+      animation-delay: 0.5s;
     }
-
-    .masthead-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--rust);
     }
-
-    .issue-info {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      text-align: right;
-    }
-
-    .header-hero {
-      padding: 3rem 0 2rem;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: end;
-      gap: 2rem;
-    }
-
-    .header-left {
-      padding-bottom: 0.5rem;
-    }
-
-    .header-left p {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 0.5rem;
-    }
-
-    .header-left h2 {
+    .hero-name {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1rem, 2vw, 1.3rem);
-      font-weight: 400;
-      font-style: italic;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .masthead-title {
-      text-align: center;
-    }
-
-    .masthead-title h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-size: clamp(2.8rem, 7vw, 6rem);
       font-weight: 900;
       line-height: 0.9;
+      color: var(--paper);
       letter-spacing: -0.02em;
-      white-space: nowrap;
+      margin-bottom: 1.5rem;
     }
-
-    .masthead-title .name-line {
+    .hero-name .italic-sub {
       display: block;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 0.52em;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3em;
     }
-
-    .masthead-title .divider-rule {
-      width: 100%;
-      height: 2px;
-      background: var(--ink);
-      margin: 0.6rem 0;
+    .hero-divider {
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--rust), var(--gold), transparent);
+      margin-bottom: 2rem;
+      animation: rulerGrow 1.4s cubic-bezier(0.16,1,0.3,1) both;
+      animation-delay: 0.7s;
     }
-
-    .masthead-title .subtitle {
-      font-family: 'DM Mono', monospace;
-      font-size: clamp(0.55rem, 1.1vw, 0.78rem);
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--rust);
+    .hero-desc {
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      line-height: 1.9;
+      color: rgba(245,240,232,0.65);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s ease both;
+      animation-delay: 0.9s;
     }
-
-    .header-right {
-      text-align: right;
-      padding-bottom: 0.5rem;
+    .hero-desc em { color: var(--gold); font-style: italic; }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease both;
+      animation-delay: 1.1s;
     }
-
-    .header-right p {
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--rust);
+      color: var(--paper);
       font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 0.5rem;
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: pulseGlow 2.5s infinite;
+      animation-delay: 2s;
     }
+    .btn-primary:hover { background: #9e3a20; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,74,46,0.4); }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1.5px solid rgba(245,240,232,0.25);
+      color: rgba(245,240,232,0.65);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
 
-    .header-right blockquote {
+    .hero-right { animation: slideInRight 1s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.4s; }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(245,240,232,0.06);
+    }
+    .stat-box {
+      background: rgba(14,12,9,0.7);
+      padding: 2rem 1.5rem;
+      transition: background 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .stat-box:hover { background: rgba(184,74,46,0.15); }
+    .stat-num {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
-      font-style: italic;
-      color: var(--muted);
-      line-height: 1.5;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      animation: float 4s ease-in-out infinite;
+    }
+    .stat-box:nth-child(2) .stat-num { animation-delay: 0.7s; }
+    .stat-box:nth-child(3) .stat-num { animation-delay: 1.4s; }
+    .stat-box:nth-child(4) .stat-num { animation-delay: 2.1s; }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.35);
     }
 
-    /* ─── INTRO BAND ─── */
+    .hero-email-bar {
+      position: relative;
+      z-index: 2;
+      background: rgba(200,155,60,0.07);
+      border-top: 1px solid rgba(200,155,60,0.15);
+      padding: 1rem 4vw;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      animation: fadeIn 1s ease both;
+      animation-delay: 1.3s;
+    }
+    .hero-email-bar .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .hero-email-bar a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--paper);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .hero-email-bar a:hover { color: var(--gold); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      z-index: 2;
+      animation: fadeIn 1.5s ease both;
+      animation-delay: 1.8s;
+    }
+    .scroll-hint span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.25);
+    }
+    .scroll-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--rust);
+      animation: scrollBounce 1.5s ease-in-out infinite;
+    }
+
+    /* INTRO BAND */
     .intro-band {
       background: var(--ink);
       color: var(--paper);
@@ -165,83 +282,40 @@
       grid-template-columns: 1fr 2px 1fr;
       gap: 3rem;
       align-items: center;
-      animation: fadeUp 0.8s ease both;
-      animation-delay: 0.2s;
     }
-
-    .intro-band .divider-vert {
-      background: rgba(245,240,232,0.2);
-      height: 100%;
-      min-height: 60px;
-    }
-
-    .intro-text {
-      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
-      line-height: 1.8;
-      color: rgba(245,240,232,0.85);
-    }
-
-    .intro-text strong {
-      color: var(--gold);
-      font-style: italic;
-    }
-
-    .intro-cta {
-      text-align: right;
-    }
-
+    .intro-band .dv { background: rgba(245,240,232,0.08); height: 100%; min-height: 60px; }
+    .intro-text { font-size: clamp(0.88rem, 1.5vw, 1.05rem); line-height: 1.9; color: rgba(245,240,232,0.7); }
+    .intro-text strong { color: var(--gold); font-style: italic; }
+    .intro-cta { text-align: right; }
     .intro-cta p {
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 1rem;
     }
-
     .cta-btn {
       display: inline-block;
       border: 1.5px solid var(--gold);
       color: var(--gold);
       font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       padding: 0.75rem 2rem;
       text-decoration: none;
       transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
     }
+    .cta-btn:hover { background: var(--gold); color: var(--ink); }
 
-    .cta-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--gold);
-      transform: translateX(-101%);
-      transition: transform 0.3s ease;
-      z-index: -1;
-    }
-
-    .cta-btn:hover {
-      color: var(--ink);
-    }
-
-    .cta-btn:hover::before {
-      transform: translateX(0);
-    }
-
-    /* ─── SECTION LABEL ─── */
+    /* SECTION LABEL */
     .section-label {
       padding: 2.5rem 4vw 0.5rem;
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      animation: fadeUp 0.7s ease both;
-      animation-delay: 0.3s;
     }
-
     .section-label span {
       font-family: 'DM Mono', monospace;
       font-size: 0.68rem;
@@ -250,14 +324,9 @@
       color: var(--rust);
       white-space: nowrap;
     }
+    .section-label hr { flex: 1; border: none; border-top: 1px solid var(--line); }
 
-    .section-label hr {
-      flex: 1;
-      border: none;
-      border-top: 1px solid var(--line);
-    }
-
-    /* ─── SERVICES GRID ─── */
+    /* SERVICES GRID */
     .services-grid {
       padding: 1rem 4vw 4rem;
       display: grid;
@@ -265,37 +334,17 @@
       gap: 0;
       border-top: 2px solid var(--ink);
     }
-
     .service-card {
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       padding: 2rem 1.8rem;
-      position: relative;
-      transition: background 0.3s ease;
-      animation: fadeUp 0.6s ease both;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
       cursor: default;
+      opacity: 0;
     }
-
-    .service-card:nth-child(1) { animation-delay: 0.1s; }
-    .service-card:nth-child(2) { animation-delay: 0.15s; }
-    .service-card:nth-child(3) { animation-delay: 0.2s; }
-    .service-card:nth-child(4) { animation-delay: 0.25s; }
-    .service-card:nth-child(5) { animation-delay: 0.3s; }
-    .service-card:nth-child(6) { animation-delay: 0.35s; }
-    .service-card:nth-child(7) { animation-delay: 0.4s; }
-    .service-card:nth-child(8) { animation-delay: 0.45s; }
-    .service-card:nth-child(9) { animation-delay: 0.5s; }
-    .service-card:nth-child(10) { animation-delay: 0.55s; }
-    .service-card:nth-child(11) { animation-delay: 0.6s; }
-
-    .service-card:hover {
-      background: var(--aged);
-    }
-
-    .service-card:hover .service-num {
-      color: var(--rust);
-    }
-
+    .service-card.visible { animation: cardEntrance 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .service-card:hover { background: var(--aged); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(14,12,9,0.08); z-index: 1; position: relative; }
+    .service-card:hover .service-num { color: rgba(184,74,46,0.18); }
     .service-num {
       font-family: 'Playfair Display', serif;
       font-size: 3.5rem;
@@ -303,26 +352,17 @@
       color: var(--line);
       line-height: 1;
       margin-bottom: 0.5rem;
-      transition: color 0.3s ease;
+      transition: color 0.3s;
       letter-spacing: -0.03em;
     }
-
     .service-title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      font-size: clamp(1.05rem,1.8vw,1.25rem);
       font-weight: 700;
       line-height: 1.3;
       margin-bottom: 0.7rem;
-      color: var(--ink);
     }
-
-    .service-desc {
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--muted);
-      font-style: italic;
-    }
-
+    .service-desc { font-size: 0.82rem; line-height: 1.7; color: var(--muted); font-style: italic; }
     .service-tag {
       display: inline-block;
       margin-top: 1rem;
@@ -334,50 +374,232 @@
       border-top: 1px solid var(--rust);
       padding-top: 0.3rem;
     }
-
-    /* ─── FEATURED CARD ─── */
     .service-card.featured {
       background: var(--ink);
       grid-column: span 2;
     }
+    .service-card.featured .service-num { color: rgba(245,240,232,0.05); }
+    .service-card.featured .service-title { color: var(--paper); font-size: clamp(1.2rem,2.5vw,1.6rem); }
+    .service-card.featured .service-desc { color: rgba(245,240,232,0.55); }
+    .service-card.featured .service-tag { color: var(--gold); border-color: var(--gold); }
+    .service-card.featured:hover { background: #1a1814; transform: none; box-shadow: none; }
 
-    .service-card.featured .service-num {
-      color: rgba(245,240,232,0.08);
+    /* REVIEWS */
+    .reviews-section {
+      background: var(--aged);
+      border-top: 2px solid var(--ink);
+      padding: 4rem 4vw;
     }
-
-    .service-card.featured .service-title {
+    .reviews-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      margin-bottom: 3rem;
+      gap: 2rem;
+    }
+    .reviews-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem,4vw,3rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .reviews-header h2 em {
+      display: block;
+      font-weight: 400;
+      font-size: 0.5em;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4em;
+    }
+    .avg-rating-box {
+      text-align: center;
+      background: var(--ink);
       color: var(--paper);
-      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      padding: 1.5rem 2rem;
+      min-width: 140px;
     }
-
-    .service-card.featured .service-desc {
-      color: rgba(245,240,232,0.6);
-    }
-
-    .service-card.featured .service-tag {
+    .avg-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
       color: var(--gold);
+      line-height: 1;
+    }
+    .avg-stars { font-size: 1.1rem; margin: 0.3rem 0; }
+    .avg-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.4);
+    }
+    .comments-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .comment-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 1.8rem;
+      transition: box-shadow 0.3s, transform 0.2s;
+      animation: fadeUp 0.5s ease both;
+    }
+    .comment-card:hover { box-shadow: 0 8px 32px rgba(14,12,9,0.1); transform: translateY(-2px); }
+    .comment-stars { font-size: 1.1rem; margin-bottom: 0.8rem; }
+    .s-on  { color: var(--gold); }
+    .s-off { color: rgba(14,12,9,0.12); }
+    .comment-text {
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: var(--ink);
+      font-style: italic;
+      margin-bottom: 1.2rem;
+    }
+    .comment-text::before { content: '\201C'; color: var(--rust); font-size: 1.5em; line-height: 0; vertical-align: -0.3em; margin-right: 2px; }
+    .comment-meta { border-top: 1px solid var(--line); padding-top: 1rem; }
+    .comment-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .comment-detail { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+    .no-comments { text-align: center; padding: 3rem; color: var(--muted); font-style: italic; grid-column: 1/-1; }
+
+    /* FORM */
+    .form-section {
+      background: var(--ink);
+      border-top: 2px solid var(--rust);
+      padding: 4rem 4vw;
+    }
+    .form-inner { max-width: 700px; margin: 0 auto; }
+    .form-heading { text-align: center; margin-bottom: 3rem; }
+    .form-heading h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem,3vw,2.2rem);
+      font-weight: 900;
+      color: var(--paper);
+      margin-bottom: 0.5rem;
+    }
+    .form-heading p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.4);
+    }
+
+    /* Star picker */
+    .star-picker-wrap { text-align: center; margin-bottom: 2.5rem; }
+    .star-picker-wrap p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .star-picker {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      gap: 0.3rem;
+    }
+    .star-picker input { display: none; }
+    .star-picker label {
+      font-size: 2.4rem;
+      color: rgba(245,240,232,0.1);
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      user-select: none;
+    }
+    .star-picker label:hover,
+    .star-picker label:hover ~ label,
+    .star-picker input:checked ~ label {
+      color: var(--gold);
+    }
+    .star-picker label:hover { transform: scale(1.25); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-field.full { grid-column: 1/-1; }
+    .form-field label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .form-field label .req { color: var(--rust); }
+    .form-field input,
+    .form-field textarea {
+      background: rgba(245,240,232,0.05);
+      border: 1px solid rgba(245,240,232,0.1);
+      color: var(--paper);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus {
       border-color: var(--gold);
+      background: rgba(245,240,232,0.08);
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: rgba(245,240,232,0.2); font-style: italic; }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+
+    .submit-row { margin-top: 1.5rem; display: flex; justify-content: center; }
+    .submit-btn {
+      background: var(--rust);
+      color: var(--paper);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 1rem 3rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .submit-btn:hover:not(:disabled) { background: #9e3a20; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,74,46,0.4); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .form-msg {
+      text-align: center;
+      margin-top: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      min-height: 1.5rem;
+    }
+    .form-msg.success { color: #6abf69; }
+    .form-msg.error   { color: #e07070; }
+
+    .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid rgba(245,240,232,0.3);
+      border-top-color: var(--paper);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
     }
 
-    .service-card.featured:hover {
-      background: #1a1814;
-    }
-
-    .service-card.featured:hover .service-num {
-      color: rgba(200,155,60,0.15);
-    }
-
-    /* ─── FOOTER ─── */
+    /* FOOTER */
     footer {
       border-top: 2px solid var(--ink);
       padding: 3rem 4vw;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 2rem;
-      align-items: start;
       background: var(--aged);
     }
-
     footer .footer-col h3 {
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
@@ -388,22 +610,11 @@
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--line);
     }
-
-    footer .footer-col p {
-      font-size: 0.85rem;
-      line-height: 1.8;
-      color: var(--muted);
-    }
-
-    footer .footer-col p strong {
-      color: var(--ink);
-      font-style: normal;
-    }
-
-    .footer-center {
-      text-align: center;
-    }
-
+    footer .footer-col p { font-size: 0.85rem; line-height: 1.8; color: var(--muted); }
+    footer .footer-col p strong { color: var(--ink); }
+    footer .footer-col a { color: var(--rust); text-decoration: none; }
+    footer .footer-col a:hover { text-decoration: underline; }
+    .footer-center { text-align: center; }
     .footer-center .logo-sm {
       font-family: 'Playfair Display', serif;
       font-size: 1.5rem;
@@ -411,7 +622,6 @@
       display: block;
       margin-bottom: 0.5rem;
     }
-
     .footer-center p {
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
@@ -419,186 +629,355 @@
       text-transform: uppercase;
       color: var(--muted);
     }
-
     .footer-right { text-align: right; }
 
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 720px) {
-      .header-hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .header-left, .header-right { display: none; }
-      .intro-band {
-        grid-template-columns: 1fr;
-      }
-      .intro-band .divider-vert { display: none; }
-      .intro-cta { text-align: center; }
-      footer {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .footer-right { text-align: center; }
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .intro-band { grid-template-columns: 1fr; }
+      .intro-band .dv { display: none; }
+      .intro-cta { text-align: left; }
       .service-card.featured { grid-column: span 1; }
+      .form-grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; text-align: center; }
+      .footer-right { text-align: center; }
+      .reviews-header { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
-<header>
-  <div class="header-top">
-    <span class="masthead-tag">Corpus &amp; Computational Linguistics · Professional Research Services</span>
-    <span class="issue-info">Paid Services Available · All Enquiries Welcome</span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Paid Research Services</div>
+      <h1 class="hero-name">
+        <span class="italic-sub">Muhammad Shoaib</span>
+        TAHIR
+      </h1>
+      <div class="hero-divider"></div>
+      <p class="hero-desc">
+        Specialist in <em>Corpus Linguistics</em>, Computational Language Processing &amp; NLP — delivering rigorous, reproducible, and publication-ready outputs for academics, institutions, and researchers worldwide.
+      </p>
+      <div class="hero-actions">
+        <a href="mailto:Shoaibtahir410@gmail.com" class="btn-primary">✉ &nbsp;Contact Me</a>
+        <a href="#services" class="btn-outline">↓ &nbsp;View Services</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-stats">
+        <div class="stat-box"><div class="stat-num">11+</div><div class="stat-label">Services</div></div>
+        <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Corpus Types</div></div>
+        <div class="stat-box"><div class="stat-num">NLP</div><div class="stat-label">Tool Dev</div></div>
+        <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Custom Work</div></div>
+      </div>
+    </div>
   </div>
 
-  <div class="header-hero">
-    <div class="header-left">
-      <p>Specialisation</p>
-      <h2>Corpus Linguistics,<br/>Computational Methods<br/>&amp; NLP Research</h2>
-    </div>
-
-    <div class="masthead-title">
-      <span class="name-line" style="font-size:clamp(1rem,2.5vw,1.8rem); font-family:'Playfair Display',serif; font-style:italic; font-weight:400; color:var(--muted);">Muhammad Shoaib</span>
-      <h1><span class="name-line">TAHIR</span></h1>
-      <div class="divider-rule"></div>
-      <p class="subtitle">Research &amp; Linguistic Services</p>
-    </div>
-
-    <div class="header-right">
-      <p>Philosophy</p>
-      <blockquote>"Precision in language<br/>is precision in thought —<br/>and in research."</blockquote>
-    </div>
+  <div class="hero-email-bar">
+    <span class="label">Email</span>
+    <a href="mailto:Shoaibtahir410@gmail.com">Shoaibtahir410@gmail.com</a>
   </div>
-</header>
 
-<!-- ═══════════════ INTRO ═══════════════ -->
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- INTRO -->
 <div class="intro-band">
   <p class="intro-text">
-    A dedicated researcher offering <strong>professional, paid services</strong> at the intersection of corpus linguistics, computational language processing, and NLP — delivering rigorous, reproducible, and publication-ready outputs for academics, institutions, and independent researchers worldwide.
+    A dedicated researcher offering <strong>professional, paid services</strong> at the intersection of corpus linguistics, computational language processing, and NLP — delivering rigorous, reproducible, and publication-ready outputs.
   </p>
-  <div class="divider-vert"></div>
+  <div class="dv"></div>
   <div class="intro-cta">
     <p>Ready to collaborate?</p>
-    <a href="mailto:your@email.com" class="cta-btn">Get in Touch</a>
+    <a href="mailto:Shoaibtahir410@gmail.com" class="cta-btn">Get in Touch</a>
   </div>
 </div>
 
-<!-- ═══════════════ SERVICES ═══════════════ -->
-<div class="section-label">
-  <span>Services Offered</span>
-  <hr/>
-  <span>Paid · Professional · Research-Grade</span>
+<!-- SERVICES -->
+<div id="services" class="section-label">
+  <span>Services Offered</span><hr/><span>Paid · Professional · Research-Grade</span>
 </div>
 
 <div class="services-grid">
-
   <div class="service-card">
     <div class="service-num">01</div>
     <h2 class="service-title">Audio to Text</h2>
     <p class="service-desc">Accurate transcription of spoken language data — interviews, field recordings, and broadcast material — prepared for linguistic analysis.</p>
     <span class="service-tag">Transcription</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">02</div>
     <h2 class="service-title">Linguistic Annotation</h2>
     <p class="service-desc">All annotation types: POS tagging, dependency, semantic role labelling, discourse, pragmatic, and custom schema design for any research purpose.</p>
     <span class="service-tag">Annotation · All Types</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">03</div>
     <h2 class="service-title">Corpus Building</h2>
     <p class="service-desc">End-to-end corpus design, data collection, cleaning, normalisation, and structuring — from raw text to a fully query-ready research corpus.</p>
     <span class="service-tag">Data · Corpus Design</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">04</div>
     <h2 class="service-title">NLP Tool Development</h2>
     <p class="service-desc">Custom pipelines and tools tailored to your research goals — tokenisers, taggers, parsers, and specialised NLP utilities built from the ground up.</p>
     <span class="service-tag">Development · NLP</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">05</div>
     <h2 class="service-title">Research Automation</h2>
     <p class="service-desc">Scripted workflows that automate repetitive research tasks — data extraction, batch processing, report generation, and annotation pipelines.</p>
     <span class="service-tag">Automation · Scripting</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">06</div>
     <h2 class="service-title">Text Analysis</h2>
     <p class="service-desc">Frequency profiling, collocation analysis, keyword extraction, concordancing, sentiment, and statistical textual analysis with full reporting.</p>
     <span class="service-tag">Analysis · Statistics</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">07</div>
     <h2 class="service-title">Rule-Based Pattern Matching</h2>
     <p class="service-desc">Handcrafted rule systems that detect syntactic, semantic, and discourse patterns with high precision — no training data required.</p>
     <span class="service-tag">Rules · Patterns</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">08</div>
     <h2 class="service-title">Lexical Pattern Matching</h2>
     <p class="service-desc">Identification and extraction of lexical patterns, collocational frames, formulaic sequences, and multi-word expressions across large corpora.</p>
     <span class="service-tag">Lexis · Patterns</span>
   </div>
-
   <div class="service-card featured">
     <div class="service-num">09</div>
     <h2 class="service-title">Morphological &amp; All-Type Pattern Matching</h2>
     <p class="service-desc">Morphological segmentation, inflectional and derivational pattern analysis, and a full spectrum of pattern matching methodologies spanning lexical, syntactic, semantic, prosodic, and pragmatic levels — adapted precisely to your language and research domain.</p>
     <span class="service-tag">Morphology · Comprehensive Coverage</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">10</div>
     <h2 class="service-title">Parsing</h2>
     <p class="service-desc">Constituency and dependency parsing, treebank development, grammar induction, and parse-tree analysis for any language or linguistic framework.</p>
     <span class="service-tag">Syntax · Parsing</span>
   </div>
-
   <div class="service-card">
     <div class="service-num">11</div>
     <h2 class="service-title">All Corpus &amp; Computational Linguistics Research</h2>
     <p class="service-desc">Beyond the list above — any research task at the intersection of corpus methods and computational linguistics. If it involves language data and computation, it is within scope.</p>
     <span class="service-tag">Full Scope · Research</span>
   </div>
-
 </div>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="reviews-header">
+    <h2><em>What Researchers Say</em>Public Reviews</h2>
+    <div class="avg-rating-box">
+      <div class="avg-num" id="avgNum">—</div>
+      <div class="avg-stars" id="avgStars">☆☆☆☆☆</div>
+      <div class="avg-count" id="avgCount">No reviews yet</div>
+    </div>
+  </div>
+  <div class="comments-list" id="commentsList">
+    <div class="no-comments">Loading reviews…</div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section" id="review-form">
+  <div class="form-inner">
+    <div class="form-heading">
+      <h2>Leave a Review</h2>
+      <p>Your review is public · All fields required *</p>
+    </div>
+
+    <div class="star-picker-wrap">
+      <p>Your Rating <span style="color:var(--rust)">*</span></p>
+      <div class="star-picker">
+        <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
+        <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
+        <input type="radio" name="rating" id="s3" value="3"><label for="s3">★</label>
+        <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
+        <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Full Name <span class="req">*</span></label>
+        <input type="text" id="fName" placeholder="Dr. Jane Smith" maxlength="80" />
+      </div>
+      <div class="form-field">
+        <label>City <span class="req">*</span></label>
+        <input type="text" id="fCity" placeholder="London" maxlength="60" />
+      </div>
+      <div class="form-field">
+        <label>Organization / Institute <span class="req">*</span></label>
+        <input type="text" id="fOrg" placeholder="University of Oxford" maxlength="100" />
+      </div>
+      <div class="form-field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="fEmail" placeholder="jane@university.edu" maxlength="120" />
+      </div>
+      <div class="form-field full">
+        <label>Your Review <span class="req">*</span></label>
+        <textarea id="fComment" placeholder="Share your experience working with Muhammad Shoaib Tahir…" maxlength="800"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submitBtn" onclick="submitReview()">Submit Review</button>
+    </div>
+    <div class="form-msg" id="formMsg"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
   <div class="footer-col">
     <h3>About</h3>
-    <p>Muhammad Shoaib Tahir is a specialist researcher in corpus and computational linguistics, offering <strong>professional paid services</strong> to the global research community — academics, postgraduates, institutions, and independent scholars.</p>
+    <p>Muhammad Shoaib Tahir is a specialist researcher in corpus and computational linguistics, offering <strong>professional paid services</strong> to the global research community.</p>
   </div>
-
   <div class="footer-col footer-center">
     <span class="logo-sm">M. S. Tahir</span>
     <p>Corpus &amp; Computational Linguistics<br/>Research Services</p>
   </div>
-
   <div class="footer-col footer-right">
-    <h3>Enquiries</h3>
-    <p>All services are available on a <strong>paid, project basis</strong>. Rates are discussed upon enquiry depending on scope, complexity, and timeline.</p>
+    <h3>Contact</h3>
+    <p><strong>Email</strong><br/><a href="mailto:Shoaibtahir410@gmail.com">Shoaibtahir410@gmail.com</a></p>
     <br/>
-    <p style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--rust);">
-      Open to collaborations worldwide
-    </p>
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);">Open to collaborations worldwide</p>
   </div>
 </footer>
 
+<script>
+const STORAGE_KEY = 'mst_reviews_v2';
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function stars(n, total=5) {
+  return '<span class="s-on">' + '★'.repeat(n) + '</span>' +
+         '<span class="s-off">' + '☆'.repeat(total - n) + '</span>';
+}
+
+async function loadReviews() {
+  const list   = document.getElementById('commentsList');
+  const avgNum = document.getElementById('avgNum');
+  const avgSt  = document.getElementById('avgStars');
+  const avgCt  = document.getElementById('avgCount');
+
+  let reviews = [];
+  try {
+    const res = await window.storage.get(STORAGE_KEY, true);
+    if (res && res.value) reviews = JSON.parse(res.value);
+  } catch(e) {}
+
+  if (!reviews.length) {
+    list.innerHTML = '<div class="no-comments">No reviews yet — be the first to share your experience!</div>';
+    avgNum.textContent = '—';
+    avgSt.innerHTML = '<span class="s-off">☆☆☆☆☆</span>';
+    avgCt.textContent = 'No reviews yet';
+    return;
+  }
+
+  const avg = reviews.reduce((s,r) => s + r.rating, 0) / reviews.length;
+  avgNum.textContent = avg.toFixed(1);
+  avgSt.innerHTML = stars(Math.round(avg));
+  avgCt.textContent = reviews.length + (reviews.length===1?' review':' reviews');
+
+  const sorted = [...reviews].reverse();
+  list.innerHTML = sorted.map((r,i) => `
+    <div class="comment-card" style="animation-delay:${i*0.07}s">
+      <div class="comment-stars">${stars(r.rating)}</div>
+      <p class="comment-text">${esc(r.comment)}</p>
+      <div class="comment-meta">
+        <div class="comment-name">${esc(r.name)}</div>
+        <div class="comment-detail">${esc(r.city)} &nbsp;·&nbsp; ${esc(r.org)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function submitReview() {
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('formMsg');
+
+  const name    = document.getElementById('fName').value.trim();
+  const city    = document.getElementById('fCity').value.trim();
+  const org     = document.getElementById('fOrg').value.trim();
+  const email   = document.getElementById('fEmail').value.trim();
+  const comment = document.getElementById('fComment').value.trim();
+  const ratingEl = document.querySelector('input[name="rating"]:checked');
+
+  if (!name||!city||!org||!email||!comment||!ratingEl) {
+    msg.textContent = '⚠ Please fill in all fields and select a star rating.';
+    msg.className = 'form-msg error';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent = '⚠ Please enter a valid email address.';
+    msg.className = 'form-msg error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  msg.textContent = '';
+
+  try {
+    let reviews = [];
+    try {
+      const res = await window.storage.get(STORAGE_KEY, true);
+      if (res && res.value) reviews = JSON.parse(res.value);
+    } catch(e) {}
+
+    reviews.push({ name, city, org, comment, rating: parseInt(ratingEl.value), date: new Date().toISOString() });
+    await window.storage.set(STORAGE_KEY, JSON.stringify(reviews), true);
+
+    msg.textContent = '✓ Thank you! Your review is now public.';
+    msg.className = 'form-msg success';
+
+    ['fName','fCity','fOrg','fEmail','fComment'].forEach(id => document.getElementById(id).value = '');
+    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+
+    await loadReviews();
+    document.getElementById('reviews').scrollIntoView({ behavior:'smooth', block:'start' });
+  } catch(e) {
+    msg.textContent = '✗ Something went wrong. Please try again.';
+    msg.className = 'form-msg error';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Review';
+}
+
+// Scroll-triggered service card animation
+const io = new IntersectionObserver((entries) => {
+  let delay = 0;
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      setTimeout(() => { el.classList.add('visible'); }, delay);
+      delay += 60;
+      io.unobserve(el);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.service-card').forEach(c => io.observe(c));
+
+loadReviews();
+</script>
 </body>
 </html>
