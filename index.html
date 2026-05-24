@@ -33,7 +33,6 @@
       opacity: 0.6;
     }
 
-    /* ANIMATIONS */
     @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
     @keyframes slideInLeft { from{opacity:0;transform:translateX(-50px)} to{opacity:1;transform:translateX(0)} }
@@ -486,7 +485,6 @@
       color: rgba(245,240,232,0.4);
     }
 
-    /* Star picker */
     .star-picker-wrap { text-align: center; margin-bottom: 2.5rem; }
     .star-picker-wrap p {
       font-family: 'DM Mono', monospace;
@@ -511,9 +509,7 @@
     }
     .star-picker label:hover,
     .star-picker label:hover ~ label,
-    .star-picker input:checked ~ label {
-      color: var(--gold);
-    }
+    .star-picker input:checked ~ label { color: var(--gold); }
     .star-picker label:hover { transform: scale(1.25); }
 
     .form-grid {
@@ -859,125 +855,134 @@
 </footer>
 
 <script>
-const STORAGE_KEY = 'mst_reviews_v2';
+  // =====================================================
+  // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
+  // =====================================================
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxleH29_g0UZyNokN5QZPrUz20KAJDgXtCpR5vYoR9WGj3b6E9tW6F5MQJsRuo0bg1E/exec';
+  // =====================================================
 
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function stars(n, total=5) {
-  return '<span class="s-on">' + '★'.repeat(n) + '</span>' +
-         '<span class="s-off">' + '☆'.repeat(total - n) + '</span>';
-}
-
-async function loadReviews() {
-  const list   = document.getElementById('commentsList');
-  const avgNum = document.getElementById('avgNum');
-  const avgSt  = document.getElementById('avgStars');
-  const avgCt  = document.getElementById('avgCount');
-
-  let reviews = [];
-  try {
-    const res = await window.storage.get(STORAGE_KEY, true);
-    if (res && res.value) reviews = JSON.parse(res.value);
-  } catch(e) {}
-
-  if (!reviews.length) {
-    list.innerHTML = '<div class="no-comments">No reviews yet — be the first to share your experience!</div>';
-    avgNum.textContent = '—';
-    avgSt.innerHTML = '<span class="s-off">☆☆☆☆☆</span>';
-    avgCt.textContent = 'No reviews yet';
-    return;
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  const avg = reviews.reduce((s,r) => s + r.rating, 0) / reviews.length;
-  avgNum.textContent = avg.toFixed(1);
-  avgSt.innerHTML = stars(Math.round(avg));
-  avgCt.textContent = reviews.length + (reviews.length===1?' review':' reviews');
-
-  const sorted = [...reviews].reverse();
-  list.innerHTML = sorted.map((r,i) => `
-    <div class="comment-card" style="animation-delay:${i*0.07}s">
-      <div class="comment-stars">${stars(r.rating)}</div>
-      <p class="comment-text">${esc(r.comment)}</p>
-      <div class="comment-meta">
-        <div class="comment-name">${esc(r.name)}</div>
-        <div class="comment-detail">${esc(r.city)} &nbsp;·&nbsp; ${esc(r.org)}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-async function submitReview() {
-  const btn = document.getElementById('submitBtn');
-  const msg = document.getElementById('formMsg');
-
-  const name    = document.getElementById('fName').value.trim();
-  const city    = document.getElementById('fCity').value.trim();
-  const org     = document.getElementById('fOrg').value.trim();
-  const email   = document.getElementById('fEmail').value.trim();
-  const comment = document.getElementById('fComment').value.trim();
-  const ratingEl = document.querySelector('input[name="rating"]:checked');
-
-  if (!name||!city||!org||!email||!comment||!ratingEl) {
-    msg.textContent = '⚠ Please fill in all fields and select a star rating.';
-    msg.className = 'form-msg error';
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    msg.textContent = '⚠ Please enter a valid email address.';
-    msg.className = 'form-msg error';
-    return;
+  function stars(n, total=5) {
+    return '<span class="s-on">' + '★'.repeat(n) + '</span>' +
+           '<span class="s-off">' + '☆'.repeat(total - n) + '</span>';
   }
 
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Submitting…';
-  msg.textContent = '';
+  async function loadReviews() {
+    const list   = document.getElementById('commentsList');
+    const avgNum = document.getElementById('avgNum');
+    const avgSt  = document.getElementById('avgStars');
+    const avgCt  = document.getElementById('avgCount');
 
-  try {
-    let reviews = [];
     try {
-      const res = await window.storage.get(STORAGE_KEY, true);
-      if (res && res.value) reviews = JSON.parse(res.value);
-    } catch(e) {}
+      const res = await fetch(APPS_SCRIPT_URL);
+      const data = await res.json();
+      const reviews = data.reviews || [];
 
-    reviews.push({ name, city, org, comment, rating: parseInt(ratingEl.value), date: new Date().toISOString() });
-    await window.storage.set(STORAGE_KEY, JSON.stringify(reviews), true);
+      if (!reviews.length) {
+        list.innerHTML = '<div class="no-comments">No reviews yet — be the first to share your experience!</div>';
+        avgNum.textContent = '—';
+        avgSt.innerHTML = '<span class="s-off">☆☆☆☆☆</span>';
+        avgCt.textContent = 'No reviews yet';
+        return;
+      }
 
-    msg.textContent = '✓ Thank you! Your review is now public.';
-    msg.className = 'form-msg success';
+      const avg = reviews.reduce((s, r) => s + Number(r.rating), 0) / reviews.length;
+      avgNum.textContent = avg.toFixed(1);
+      avgSt.innerHTML = stars(Math.round(avg));
+      avgCt.textContent = reviews.length + (reviews.length === 1 ? ' review' : ' reviews');
 
-    ['fName','fCity','fOrg','fEmail','fComment'].forEach(id => document.getElementById(id).value = '');
-    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+      const sorted = [...reviews].reverse();
+      list.innerHTML = sorted.map((r, i) => `
+        <div class="comment-card" style="animation-delay:${i * 0.07}s">
+          <div class="comment-stars">${stars(Number(r.rating))}</div>
+          <p class="comment-text">${esc(r.comment)}</p>
+          <div class="comment-meta">
+            <div class="comment-name">${esc(r.name)}</div>
+            <div class="comment-detail">${esc(r.city)} &nbsp;·&nbsp; ${esc(r.org)}</div>
+          </div>
+        </div>
+      `).join('');
 
-    await loadReviews();
-    document.getElementById('reviews').scrollIntoView({ behavior:'smooth', block:'start' });
-  } catch(e) {
-    msg.textContent = '✗ Something went wrong. Please try again.';
-    msg.className = 'form-msg error';
+    } catch(e) {
+      list.innerHTML = '<div class="no-comments">Could not load reviews. Please try again later.</div>';
+    }
   }
 
-  btn.disabled = false;
-  btn.textContent = 'Submit Review';
-}
+  async function submitReview() {
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('formMsg');
 
-// Scroll-triggered service card animation
-const io = new IntersectionObserver((entries) => {
-  let delay = 0;
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      setTimeout(() => { el.classList.add('visible'); }, delay);
-      delay += 60;
-      io.unobserve(el);
+    const name     = document.getElementById('fName').value.trim();
+    const city     = document.getElementById('fCity').value.trim();
+    const org      = document.getElementById('fOrg').value.trim();
+    const email    = document.getElementById('fEmail').value.trim();
+    const comment  = document.getElementById('fComment').value.trim();
+    const ratingEl = document.querySelector('input[name="rating"]:checked');
+
+    if (!name || !city || !org || !email || !comment || !ratingEl) {
+      msg.textContent = '⚠ Please fill in all fields and select a star rating.';
+      msg.className = 'form-msg error';
+      return;
     }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll('.service-card').forEach(c => io.observe(c));
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = '⚠ Please enter a valid email address.';
+      msg.className = 'form-msg error';
+      return;
+    }
 
-loadReviews();
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Submitting…';
+    msg.textContent = '';
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          name, city, org, email, comment,
+          rating: parseInt(ratingEl.value)
+        })
+      });
+
+      msg.textContent = '✓ Thank you! Your review is now public.';
+      msg.className = 'form-msg success';
+
+      ['fName','fCity','fOrg','fEmail','fComment'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+
+      await loadReviews();
+      document.getElementById('reviews').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch(e) {
+      msg.textContent = '✗ Something went wrong. Please try again.';
+      msg.className = 'form-msg error';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Submit Review';
+  }
+
+  // Scroll-triggered service card animation
+  const io = new IntersectionObserver((entries) => {
+    let delay = 0;
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        setTimeout(() => { el.classList.add('visible'); }, delay);
+        delay += 60;
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.service-card').forEach(c => io.observe(c));
+
+  loadReviews();
 </script>
 </body>
 </html>
