@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Research Services — Muhammad Shoaib Tahir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink: #0e0c09;
+      --paper: #f5f0e8;
+      --aged: #e8dfc8;
+      --rust: #b84a2e;
+      --gold: #c89b3c;
+      --muted: #7a7060;
+      --line: rgba(14,12,9,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Libre Baskerville', Georgia, serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Aged paper texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding: 0 4vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 0;
+    }
+
+    .masthead-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .issue-info {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .header-hero {
+      padding: 3rem 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: end;
+      gap: 2rem;
+    }
+
+    .header-left {
+      padding-bottom: 0.5rem;
+    }
+
+    .header-left p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.5rem;
+    }
+
+    .header-left h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .masthead-title {
+      text-align: center;
+    }
+
+    .masthead-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .masthead-title .name-line {
+      display: block;
+    }
+
+    .masthead-title .divider-rule {
+      width: 100%;
+      height: 2px;
+      background: var(--ink);
+      margin: 0.6rem 0;
+    }
+
+    .masthead-title .subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.55rem, 1.1vw, 0.78rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--rust);
+    }
+
+    .header-right {
+      text-align: right;
+      padding-bottom: 0.5rem;
+    }
+
+    .header-right p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.5rem;
+    }
+
+    .header-right blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── INTRO BAND ─── */
+    .intro-band {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 2.5rem 4vw;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      gap: 3rem;
+      align-items: center;
+      animation: fadeUp 0.8s ease both;
+      animation-delay: 0.2s;
+    }
+
+    .intro-band .divider-vert {
+      background: rgba(245,240,232,0.2);
+      height: 100%;
+      min-height: 60px;
+    }
+
+    .intro-text {
+      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+      line-height: 1.8;
+      color: rgba(245,240,232,0.85);
+    }
+
+    .intro-text strong {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .intro-cta {
+      text-align: right;
+    }
+
+    .intro-cta p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.75rem 2rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    .cta-btn:hover {
+      color: var(--ink);
+    }
+
+    .cta-btn:hover::before {
+      transform: translateX(0);
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      padding: 2.5rem 4vw 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      animation: fadeUp 0.7s ease both;
+      animation-delay: 0.3s;
+    }
+
+    .section-label span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      white-space: nowrap;
+    }
+
+    .section-label hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ─── SERVICES GRID ─── */
+    .services-grid {
+      padding: 1rem 4vw 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0;
+      border-top: 2px solid var(--ink);
+    }
+
+    .service-card {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 2rem 1.8rem;
+      position: relative;
+      transition: background 0.3s ease;
+      animation: fadeUp 0.6s ease both;
+      cursor: default;
+    }
+
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.15s; }
+    .service-card:nth-child(3) { animation-delay: 0.2s; }
+    .service-card:nth-child(4) { animation-delay: 0.25s; }
+    .service-card:nth-child(5) { animation-delay: 0.3s; }
+    .service-card:nth-child(6) { animation-delay: 0.35s; }
+    .service-card:nth-child(7) { animation-delay: 0.4s; }
+    .service-card:nth-child(8) { animation-delay: 0.45s; }
+    .service-card:nth-child(9) { animation-delay: 0.5s; }
+    .service-card:nth-child(10) { animation-delay: 0.55s; }
+    .service-card:nth-child(11) { animation-delay: 0.6s; }
+
+    .service-card:hover {
+      background: var(--aged);
+    }
+
+    .service-card:hover .service-num {
+      color: var(--rust);
+    }
+
+    .service-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--line);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+      letter-spacing: -0.03em;
+    }
+
+    .service-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.7rem;
+      color: var(--ink);
+    }
+
+    .service-desc {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .service-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rust);
+      border-top: 1px solid var(--rust);
+      padding-top: 0.3rem;
+    }
+
+    /* ─── FEATURED CARD ─── */
+    .service-card.featured {
+      background: var(--ink);
+      grid-column: span 2;
+    }
+
+    .service-card.featured .service-num {
+      color: rgba(245,240,232,0.08);
+    }
+
+    .service-card.featured .service-title {
+      color: var(--paper);
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    }
+
+    .service-card.featured .service-desc {
+      color: rgba(245,240,232,0.6);
+    }
+
+    .service-card.featured .service-tag {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .service-card.featured:hover {
+      background: #1a1814;
+    }
+
+    .service-card.featured:hover .service-num {
+      color: rgba(200,155,60,0.15);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 2px solid var(--ink);
+      padding: 3rem 4vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+      background: var(--aged);
+    }
+
+    footer .footer-col h3 {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    footer .footer-col p {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    footer .footer-col p strong {
+      color: var(--ink);
+      font-style: normal;
+    }
+
+    .footer-center {
+      text-align: center;
+    }
+
+    .footer-center .logo-sm {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-center p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .footer-right { text-align: right; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 720px) {
+      .header-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .header-left, .header-right { display: none; }
+      .intro-band {
+        grid-template-columns: 1fr;
+      }
+      .intro-band .divider-vert { display: none; }
+      .intro-cta { text-align: center; }
+      footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .footer-right { text-align: center; }
+      .service-card.featured { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-top">
+    <span class="masthead-tag">Corpus &amp; Computational Linguistics · Professional Research Services</span>
+    <span class="issue-info">Paid Services Available · All Enquiries Welcome</span>
+  </div>
+
+  <div class="header-hero">
+    <div class="header-left">
+      <p>Specialisation</p>
+      <h2>Corpus Linguistics,<br/>Computational Methods<br/>&amp; NLP Research</h2>
+    </div>
+
+    <div class="masthead-title">
+      <span class="name-line" style="font-size:clamp(1rem,2.5vw,1.8rem); font-family:'Playfair Display',serif; font-style:italic; font-weight:400; color:var(--muted);">Muhammad Shoaib</span>
+      <h1><span class="name-line">TAHIR</span></h1>
+      <div class="divider-rule"></div>
+      <p class="subtitle">Research &amp; Linguistic Services</p>
+    </div>
+
+    <div class="header-right">
+      <p>Philosophy</p>
+      <blockquote>"Precision in language<br/>is precision in thought —<br/>and in research."</blockquote>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ INTRO ═══════════════ -->
+<div class="intro-band">
+  <p class="intro-text">
+    A dedicated researcher offering <strong>professional, paid services</strong> at the intersection of corpus linguistics, computational language processing, and NLP — delivering rigorous, reproducible, and publication-ready outputs for academics, institutions, and independent researchers worldwide.
+  </p>
+  <div class="divider-vert"></div>
+  <div class="intro-cta">
+    <p>Ready to collaborate?</p>
+    <a href="mailto:your@email.com" class="cta-btn">Get in Touch</a>
+  </div>
+</div>
+
+<!-- ═══════════════ SERVICES ═══════════════ -->
+<div class="section-label">
+  <span>Services Offered</span>
+  <hr/>
+  <span>Paid · Professional · Research-Grade</span>
+</div>
+
+<div class="services-grid">
+
+  <div class="service-card">
+    <div class="service-num">01</div>
+    <h2 class="service-title">Audio to Text</h2>
+    <p class="service-desc">Accurate transcription of spoken language data — interviews, field recordings, and broadcast material — prepared for linguistic analysis.</p>
+    <span class="service-tag">Transcription</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">02</div>
+    <h2 class="service-title">Linguistic Annotation</h2>
+    <p class="service-desc">All annotation types: POS tagging, dependency, semantic role labelling, discourse, pragmatic, and custom schema design for any research purpose.</p>
+    <span class="service-tag">Annotation · All Types</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">03</div>
+    <h2 class="service-title">Corpus Building</h2>
+    <p class="service-desc">End-to-end corpus design, data collection, cleaning, normalisation, and structuring — from raw text to a fully query-ready research corpus.</p>
+    <span class="service-tag">Data · Corpus Design</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">04</div>
+    <h2 class="service-title">NLP Tool Development</h2>
+    <p class="service-desc">Custom pipelines and tools tailored to your research goals — tokenisers, taggers, parsers, and specialised NLP utilities built from the ground up.</p>
+    <span class="service-tag">Development · NLP</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">05</div>
+    <h2 class="service-title">Research Automation</h2>
+    <p class="service-desc">Scripted workflows that automate repetitive research tasks — data extraction, batch processing, report generation, and annotation pipelines.</p>
+    <span class="service-tag">Automation · Scripting</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">06</div>
+    <h2 class="service-title">Text Analysis</h2>
+    <p class="service-desc">Frequency profiling, collocation analysis, keyword extraction, concordancing, sentiment, and statistical textual analysis with full reporting.</p>
+    <span class="service-tag">Analysis · Statistics</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">07</div>
+    <h2 class="service-title">Rule-Based Pattern Matching</h2>
+    <p class="service-desc">Handcrafted rule systems that detect syntactic, semantic, and discourse patterns with high precision — no training data required.</p>
+    <span class="service-tag">Rules · Patterns</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">08</div>
+    <h2 class="service-title">Lexical Pattern Matching</h2>
+    <p class="service-desc">Identification and extraction of lexical patterns, collocational frames, formulaic sequences, and multi-word expressions across large corpora.</p>
+    <span class="service-tag">Lexis · Patterns</span>
+  </div>
+
+  <div class="service-card featured">
+    <div class="service-num">09</div>
+    <h2 class="service-title">Morphological &amp; All-Type Pattern Matching</h2>
+    <p class="service-desc">Morphological segmentation, inflectional and derivational pattern analysis, and a full spectrum of pattern matching methodologies spanning lexical, syntactic, semantic, prosodic, and pragmatic levels — adapted precisely to your language and research domain.</p>
+    <span class="service-tag">Morphology · Comprehensive Coverage</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">10</div>
+    <h2 class="service-title">Parsing</h2>
+    <p class="service-desc">Constituency and dependency parsing, treebank development, grammar induction, and parse-tree analysis for any language or linguistic framework.</p>
+    <span class="service-tag">Syntax · Parsing</span>
+  </div>
+
+  <div class="service-card">
+    <div class="service-num">11</div>
+    <h2 class="service-title">All Corpus &amp; Computational Linguistics Research</h2>
+    <p class="service-desc">Beyond the list above — any research task at the intersection of corpus methods and computational linguistics. If it involves language data and computation, it is within scope.</p>
+    <span class="service-tag">Full Scope · Research</span>
+  </div>
+
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-col">
+    <h3>About</h3>
+    <p>Muhammad Shoaib Tahir is a specialist researcher in corpus and computational linguistics, offering <strong>professional paid services</strong> to the global research community — academics, postgraduates, institutions, and independent scholars.</p>
+  </div>
+
+  <div class="footer-col footer-center">
+    <span class="logo-sm">M. S. Tahir</span>
+    <p>Corpus &amp; Computational Linguistics<br/>Research Services</p>
+  </div>
+
+  <div class="footer-col footer-right">
+    <h3>Enquiries</h3>
+    <p>All services are available on a <strong>paid, project basis</strong>. Rates are discussed upon enquiry depending on scope, complexity, and timeline.</p>
+    <br/>
+    <p style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--rust);">
+      Open to collaborations worldwide
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
